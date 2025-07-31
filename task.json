@@ -1,0 +1,171 @@
+{
+    "1": {
+        "title": "摘要",
+        "describe": "简要概述研究背景、目的、方法、主要模型（BERT与BERT+LSTM）、数据集来源及实验结果，突出情感分类任务的现实意义和模型性能优势。",
+        "child": null
+    },
+    "2": {
+        "title": "绪论",
+        "describe": "围绕商品评论情感分析展开论述，强调其在电商推荐系统、舆情监控等领域的应用价值。结合当前自然语言处理技术的发展趋势，说明为何选择BERT及其与LSTM的融合模型作为核心方法。",
+        "child": {
+            "2.1": {
+                "title": "研究背景与意义",
+                "describe": "详细阐述情感分析在商业智能中的重要性，包括用户评论对品牌声誉管理、消费者决策支持的作用；介绍深度学习在NLP中的发展，特别是预训练语言模型如BERT带来的突破；说明京东评论与微博文本的融合数据集对于提升模型泛化能力的意义。字数不少于600字。",
+                "child": null
+            },
+            "2.2": {
+                "title": "本文主要工作内容",
+                "describe": "总结本研究的主要贡献：构建并对比BERT与BERT+LSTM两个情感分类模型；整合多源异构数据形成高质量训练集；完成从数据预处理到模型训练评估的完整流程。",
+                "child": null
+            }
+        }
+    },
+    "3": {
+        "title": "理论技术概述",
+        "describe": "介绍情感分析的基本概念与分类方式，重点讲解BERT与LSTM两种模型的原理及其在情感分类中的应用。",
+        "child": {
+            "3.1": {
+                "title": "情感分析理论",
+                "describe": "解释情感分析的任务定义、分类标准（如二分类、多分类）以及应用场景，如产品评价、舆情监测等。",
+                "child": null
+            },
+            "3.2": {
+                "title": "BERT预训练模型",
+                "describe": "介绍BERT的基本结构、双向Transformer机制及其在NLP任务中的优势。公式描述如下：\n$$\\text{Attention}(Q, K, V) = \\text{softmax}\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V$$\n其中Q、K、V分别代表查询、键、值向量，$d_k$为缩放因子。",
+                "child": null
+            },
+            "3.3": {
+                "title": "长短期记忆网络",
+                "describe": "介绍LSTM的结构，包括输入门、遗忘门、输出门的设计，及其解决长序列依赖问题的能力。公式描述如下：\n$$f_t = \\sigma(W_f \\cdot [h_{t-1}, x_t] + b_f)$$\n$$i_t = \\sigma(W_i \\cdot [h_{t-1}, x_t] + b_i)$$\n$$\\tilde{C}_t = \\tanh(W_C \\cdot [h_{t-1}, x_t] + b_C)$$\n$$C_t = f_t \\odot C_{t-1} + i_t \\odot \\tilde{C}_t$$\n$$o_t = \\sigma(W_o \\cdot [h_{t-1}, x_t] + b_o)$$\n$$h_t = o_t \\odot \\tanh(C_t)$$",
+                "child": null
+            },
+            "3.4": {
+                "title": "技术路线",
+                "describe": "明确整体技术实现路径，包括模型选型、数据处理流程、特征提取方式、训练策略等。",
+                "child": {
+                    "3.4.1": {
+                        "title": "基于BERT情感分类模型构建",
+                        "describe": "说明如何利用BERT的[CLS]标记进行情感分类，使用预训练权重并微调全连接层。",
+                        "child": null
+                    },
+                    "3.4.2": {
+                        "title": "基于BERT和LSTM的情感分类模型构建",
+                        "describe": "说明将BERT输出的嵌入向量作为LSTM输入，进一步捕捉序列语义信息，并通过全连接层进行分类。",
+                        "child": null
+                    }
+                }
+            },
+            "3.5": {
+                "title": "模型评估指标",
+                "describe": "介绍准确率（Accuracy）、精确率（Precision）、召回率（Recall）、F1分数等评价指标的定义与计算方式，用于衡量模型性能。",
+                "child": null
+            }
+        }
+    },
+    "4": {
+        "title": "情感数据文本处理",
+        "describe": "详细介绍数据获取、清洗、分词、特征提取等全过程。",
+        "child": {
+            "4.1": {
+                "title": "数据集获取与预处理",
+                "describe": "说明数据来源（微博、京东评论），并描述数据合并、去重、缺失值处理、异常字符过滤等步骤。",
+                "child": {
+                    "4.1.1": {
+                        "title": "数据来源与组成",
+                        "describe": "列出weibo_senti_100k.csv和jd_conm.csv的数据规模、样本分布情况，说明分层采样策略。",
+                        "child": null
+                    },
+                    "4.1.2": {
+                        "title": "数据清洗与标准化",
+                        "describe": "描述去除HTML标签、特殊符号、停用词、重复评论等操作，统一文本格式。",
+                        "child": null
+                    }
+                }
+            },
+            "4.2": {
+                "title": "分词与特征提取",
+                "describe": "介绍中文分词工具（如jieba）的使用，以及如何将文本转化为模型可接受的向量表示。",
+                "child": {
+                    "4.2.1": {
+                        "title": "中文分词技术",
+                        "describe": "说明jieba分词的工作原理，包括精确模式、全模式、搜索引擎模式的区别与适用场景。",
+                        "child": null
+                    },
+                    "4.2.2": {
+                        "title": "特征表示与提取",
+                        "describe": "介绍Word2Vec、TF-IDF或BERT tokenizer等方法在文本向量化中的应用。",
+                        "child": null
+                    }
+                }
+            },
+            "4.3": {
+                "title": "词频特征分析",
+                "describe": "统计高频词汇，分析正负类别的关键词差异，辅助理解模型关注点。",
+                "child": null
+            }
+        }
+    },
+    "5": {
+        "title": "情感分类系统实现",
+        "describe": "详细说明BERT与BERT+LSTM模型的具体实现过程，包括代码结构、参数设置、训练流程等。",
+        "child": {
+            "5.1": {
+                "title": "BERT情感分类模型",
+                "describe": "描述基于HuggingFace Transformers库构建BERT分类器的过程，包括加载预训练模型、添加分类层、损失函数设计等。",
+                "child": null
+            },
+            "5.2": {
+                "title": "BERT+LSTM情感分类模型",
+                "describe": "说明如何将BERT的输出作为LSTM的输入，构建混合模型，并进行联合训练。",
+                "child": null
+            },
+            "5.3": {
+                "title": "模型训练过程",
+                "describe": "介绍训练环境配置、优化器选择、学习率调整策略、早停机制等。",
+                "child": {
+                    "5.3.1": {
+                        "title": "训练环境配置",
+                        "describe": "列出使用的硬件（GPU型号）、软件环境（Python版本、PyTorch/TensorFlow版本）。",
+                        "child": null
+                    },
+                    "5.3.2": {
+                        "title": "训练策略实现",
+                        "describe": "说明批量大小、训练轮次、交叉验证、学习率调度器（如AdamW + LinearWarmup）等细节。",
+                        "child": null
+                    },
+                    "5.3.3": {
+                        "title": "模型评估与保存",
+                        "describe": "描述在验证集上评估模型性能的方法，以及最佳模型的保存策略。",
+                        "child": null
+                    }
+                }
+            }
+        }
+    },
+    "6": {
+        "title": "模型实验结果与分析",
+        "describe": "展示BERT与BERT+LSTM在训练集与测试集上的表现，进行对比分析。",
+        "child": {
+            "6.1": {
+                "title": "训练集结果",
+                "describe": "展示训练过程中损失下降曲线、准确率变化趋势，分析模型收敛情况。",
+                "child": null
+            },
+            "6.2": {
+                "title": "测试集结果",
+                "describe": "列出准确率、精确率、召回率、F1分数等指标，比较不同模型在京东评论数据上的表现。",
+                "child": null
+            },
+            "6.3": {
+                "title": "性能对比",
+                "describe": "对比BERT与BERT+LSTM在多个指标上的差异，分析融合模型的优势与局限性。",
+                "child": null
+            }
+        }
+    },
+    "7": {
+        "title": "总结和展望",
+        "describe": "总结研究成果，指出不足，并提出未来可能的研究方向，如引入注意力机制改进模型、扩展至多分类任务、部署上线等。",
+        "child": null
+    }
+}

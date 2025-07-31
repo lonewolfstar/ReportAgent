@@ -1,0 +1,77 @@
+{
+    "code_1": {
+        "summarize": "文本情感预测系统：初始化环境→加载模型→构建 Flask API 接口，支持 BERT 和 LSTM 模型预测及多模型组合推理",
+        "describe": "该代码实现了一个基于 BERT 和 LSTM 的文本情感预测系统。首先通过 init_environment 函数初始化运行环境，设置随机种子（未明确数值）以确保实验可复现，并选择设备（如 'cuda:0' 或 'cpu'）。接着通过 load_all_models 函数加载预训练的 BERT 分词器、BERT 模型、LSTM 模型以及两个分类器（BertClassifier 和 LSTMClassifier），并从指定路径加载模型权重。predict_text 函数根据输入文本和模型名称进行情感分类，当 model_name 为 'bert' 或 'lstm' 时直接使用对应模型预测；若为其他名称，则先用 BERT 提取特征再输入指定模型。此外，代码还包含 Flask 应用的主函数，启动服务监听 5000 端口，定义了 / 路由返回 index.html 页面，以及 /predict 路由接收 POST 请求，输入参数为 JSON 格式的 text 和 model_name，输出为预测结果。predict 函数与 predict_text 功能类似，但返回的是类别名称而非索引。整个系统支持多种模型配置，并提供 Web 接口供外部调用。",
+        "path": "upload_files\\codes\\api.py"
+    },
+    "code_2": {
+        "summarize": "TextDataset 类用于构建 PyTorch Dataset 对象，加载和预处理文本数据，支持指定文件路径、分词器和最大序列长度",
+        "describe": "该类用于构建 PyTorch 的 Dataset 对象，专门用于加载和预处理文本数据。输入参数包括文件路径 file_path（如 '../../datas/train.csv'）、分词器 tokenizer（如 BERT 分词器）和最大序列长度 max_len（如 512）。该类从 CSV 文件中读取数据，每条数据包含文本内容（content）和标签（label）。在 __getitem__ 方法中，对文本进行分词、填充和截断处理，返回包含 input_ids、attention_mask 和 label 的字典。输出为每个样本的张量形式，适用于 PyTorch 模型训练。",
+        "path": "upload_files\\codes\\dataset.py"
+    },
+    "code_3": {
+        "summarize": "主函数执行数据处理任务，包含文件路径设置、Excel 数据读取、评论等级分类、数据清洗、列名重命名及 CSV 文件保存",
+        "describe": "该代码段是程序的入口，用于执行数据处理任务。首先通过 os.path.join 函数拼接文件路径，输入参数为 data_dir 和子目录或文件名，例如 os.path.join(data_dir, 'jd', 'jd_conm.xlsx')，输出为完整的文件路径字符串；接着使用 pd.read_excel 函数从指定路径读取 Excel 文件，输入参数为 input_file，即 Excel 文件的完整路径，输出为包含所有列的 DataFrame，但此处仅选取了“评论内容”和“评论等级”两列；然后通过 df.loc 方法对“评论等级”进行分类处理，输入参数为 df['评论等级'].isin([1, 2])，表示选择“评论等级”为 1 或 2 的行，并将这些行的“评论等级”列值设为 0；同样地，对于 4 和 5 的行，将其设为 1；随后使用 df[df['评论等级'] != 3] 过滤掉“评论等级”为 3 的行，输入参数为 df，输出为不包含等级为 3 的新 DataFrame；接着使用 df.rename 函数重命名列名，输入参数为 {'评论内容': 'content', '评论等级': 'label'}，将原始列名替换为更简洁的英文名称；最后使用 df.to_csv 函数将处理后的 DataFrame 写入 CSV 文件，输入参数为 output_file，即输出文件的完整路径，index=False 表示不保存索引列，encoding='utf-8' 表示使用 UTF-8 编码保存文件；同时打印保存路径和处理后的数据行数。",
+        "path": "upload_files\\codes\\data_processing.py"
+    },
+    "code_4": {
+        "summarize": "页面内容与元数据整合：商品评论情感检测页面功能定义及来源信息",
+        "describe": "该页面内容由变量 page_content 存储，其值为固定字符串“商品评论情感检测”，表示当前页面的功能是进行商品评论的情感分析。元数据存储在 metadata 字典中，其中键 'source' 对应的值为文件路径 'upload_files\\codes\\index.html'，表明该页面内容来源于该 HTML 文件。主函数 if __name__ == \"__main__\" 未包含实际代码逻辑，仅涉及变量赋值，可能用于后续初始化或加载操作。Options 类未在提供的代码片段中出现，因此无法进一步解读。",
+        "path": "upload_files\\codes\\index.html"
+    },
+    "code_5": {
+        "summarize": "基于中文文本的消极评论分析与词云生成流程：导入依赖库→读取数据→筛选消极评论→分词处理→统计词频→生成词云并保存",
+        "describe": "这段代码是一个完整的中文文本分析流程，主要功能是提取测试集中标签为0的消极评论，并对其进行分词、词频统计和词云生成。代码首先导入必要的库，包括操作系统模块、中文分词库、数据处理库、计数器、词云生成库和绘图库；接着通过pd.read_csv函数读取CSV文件，筛选出标签为0的评论内容；使用jieba.cut对文本进行分词处理，得到词语列表；利用Counter统计词频，并结合停用词列表过滤无意义词汇；随后创建输出目录，初始化WordCloud对象并设置字体、尺寸、背景色等参数；最后根据词频生成词云图像，设置标题、关闭坐标轴，并将结果保存为图片文件。",
+        "path": "upload_files\\codes\\neg_word.py"
+    },
+    "code_6": {
+        "summarize": "基于中文文本的积极评论词云生成与词频统计流程：导入必要库→读取数据→筛选积极评论→分词处理→过滤停用词→生成词云图并保存→输出高频词",
+        "describe": "这段代码的功能是针对中文文本数据，生成积极评论的词云图，并统计高频词汇。首先导入了操作系统模块、中文分词库jieba、pandas数据处理库、Counter计数器、WordCloud词云生成器以及matplotlib绘图库；接着设置中文字体和负号显示方式；在主函数中读取CSV文件中的测试集数据，筛选出标签为1的积极评论内容；将所有文本合并为一个字符串后使用jieba进行分词，并过滤掉单字；然后利用Counter统计词频，并结合预定义的停用词列表过滤无意义词汇；最后通过WordCloud生成词云图像，设置字体路径、尺寸、背景颜色等参数，绘制并保存词云图，同时输出出现频率最高的20个词语及其次数。",
+        "path": "upload_files\\codes\\pos_word.py"
+    },
+    "code_7": {
+        "summarize": "模型训练与评估流程：配置环境（字体、库导入）→训练函数（含损失、优化器、进度条）→评估函数（含混淆矩阵绘制）→性能指标计算（准确率、精确率、召回率、F1、AUC）→可视化（ROC曲线、混淆矩阵、性能柱状图）",
+        "describe": "该代码实现了一个完整的模型训练与评估流程，包含多个功能模块。首先配置了 matplotlib 的中文字体支持，确保中文标签正常显示；接着导入必要的库如 PyTorch、tqdm、matplotlib、sklearn 等。定义了 train 函数，接收 model、dataloader、criterion、optimizer 和 device 参数，通过遍历 batch 进行前向传播、反向传播和优化，并使用 tqdm 显示进度条，记录总损失、正确预测数和总样本数，最终返回平均损失和准确率。evaluate 函数用于模型评估，同样接收 model、dataloader、criterion 和 device 参数，不进行梯度更新，统计损失和正确预测数，同时收集真实标签、预测标签和概率，若 is_draw 为 True，则绘制并保存混淆矩阵。在性能评估部分，计算了 accuracy（正确数 / 总样本数）、precision（sklearn 的 precision_score，二分类）、recall（sklearn 的 recall_score，二分类）、f1（sklearn 的 f1_score，二分类）、auc_value（从 all_probs 中提取正类概率，使用 roc_auc_score 计算，失败则设为 None）。此外，还实现了 roc_curve 绘制（输入 all_labels 和 positive_probs，输出 ROC 曲线图像），confusion_matrix 绘制（输入 all_labels 和 all_preds，输出混淆矩阵图像），以及 performance_metrics 柱状图绘制（输入 metrics 字典，包含各项指标数值，柱状图颜色分别为 skyblue、lightgreen、salmon、orange、purple，图表大小为 10x6 英寸，分辨率为 300dpi，y 轴范围为 0 到 105，添加网格线，设置标题为“模型性能评估指标”，y 轴标签为“百分比 (%)”，并为每个柱子添加数值标签。最后通过 plt.savefig 保存图像至指定路径，并关闭图形窗口。在整个过程中，异常处理通过 except 块捕获并打印错误信息，最终返回包含 loss、accuracy、precision、recall、f1_score 和 auc 的字典作为模型性能评估结果。",
+        "path": "upload_files\\codes\\utils.py"
+    },
+    "code_8": {
+        "summarize": "BertClassifier 类基于 BERT 模型实现文本分类功能，接收预训练模型和分类类别数作为参数，输出每个样本的分类 logits 值",
+        "describe": "该类是一个基于 BERT 模型的分类器，用于对输入文本进行分类任务。其接收一个预训练的 BERT 模型和分类类别数（num_classes）作为初始化参数。在前向传播过程中，模型通过 BERT 提取文本的嵌入表示，并使用 CLS token 的隐藏状态经过全连接层输出分类结果。输入参数包括 input_ids（形状为 [batch_size, max_length]，表示文本的 token ID 序列）和 attention_mask（形状为 [batch_size, max_length]，表示注意力掩码）；输出为每个样本的分类 logits 值（形状为 [batch_size, num_classes]）。其中，num_classes 是用户指定的分类类别数量，embedding_dim 为 BERT 模型的隐藏层维度，通常为 768 或 1024。",
+        "path": "upload_files\\codes\\Bert\\bert.py"
+    },
+    "code_9": {
+        "summarize": "基于 BERT 的文本分类训练流程：配置环境（随机种子、设备）→解析参数→加载模型与数据→构建分类器→多轮训练（含评估、调参、保存）",
+        "describe": "这段代码是一个完整的文本分类训练流程，主要功能是使用 BERT 模型对文本进行分类训练。代码首先设置了运行环境，包括固定随机种子以确保实验可复现性，以及选择设备（GPU 或 CPU）；接着通过 Options 类解析命令行参数，获取超参数配置，如最大序列长度为 256，学习率为 0.001，批次大小为 8，训练轮数为 5，模型保存路径为 save_model_root，训练和测试数据集路径分别为 train_path 和 test_path，分类数量为 num_classes；然后加载预训练的中文 BERT 分词器和模型，以及训练和测试数据集并转换为数据加载器；之后构建基于 BERT 的分类器模型，并部署到指定设备，同时定义优化器、学习率调度器；最后进入训练循环，每个 epoch 中先训练模型并计算训练损失和准确率，再评估模型性能，更新学习率，并保存当前 epoch 的模型权重。",
+        "path": "upload_files\\codes\\Bert\\main.py"
+    },
+    "code_10": {
+        "summarize": "Options 类通过 argparse 解析命令行参数，配置模型训练所需的关键参数，包括模型保存路径、数据集路径、文本最大长度、分类数量、学习率、批次大小和训练轮数。",
+        "describe": "这段代码定义了一个名为 Options 的类，用于解析命令行参数并为模型训练配置一组完整的参数值。通过 argparse 模块，它设置了多个关键参数及其默认值：模型保存路径为 ../../results/models/bert/，训练数据集路径为 ../../datas/train.csv，测试数据集路径为 ../../datas/test.csv，文本最大长度为 256，分类数量为 2，学习率为 0.001，批次大小为 8，训练轮数为 5。这些参数值共同构成了模型训练的配置方案，用户可通过命令行灵活调整。调用 Options().parse() 即可获取包含所有参数值的对象，方便在训练脚本中统一使用。",
+        "path": "upload_files\\codes\\Bert\\option.py"
+    },
+    "code_11": {
+        "summarize": "基于 BERT 的文本分类推理与评估流程：设置环境→解析参数→加载模型与数据→构建分类器→执行评估并输出结果",
+        "describe": "这段代码实现了一个基于 BERT 的文本分类任务的推理与评估流程。首先设置运行环境，包括固定随机种子、设备选择（GPU 或 CPU）以及确保可重复性；接着通过 Options 类解析命令行参数，获取超参数如最大序列长度（256）、学习率（0.001）、批次大小（8）、分类类别数（2）等，并创建保存模型的目录；然后加载预训练的中文 BERT 分词器和模型，从指定路径加载训练和测试数据集，并构建 DataLoader；随后加载已训练好的 BERT 分类模型（BertClassifier），将其部署到指定设备，并进入评估模式；最后调用 evaluate 函数对训练集和测试集进行评估，计算损失和性能指标，并将结果保存到指定路径，同时打印出训练和测试的评估结果。",
+        "path": "upload_files\\codes\\Bert\\prediction.py"
+    },
+    "code_12": {
+        "summarize": "LSTMClassifier类结合 BERT 和 LSTM 实现文本分类，输入为 BERT 模型和类别数，输出为形状为 [batch_size, num_classes] 的 logits 向量",
+        "describe": "该代码定义了一个基于 BERT 和 LSTM 的分类器模型，用于对输入文本进行分类任务。BERT 用于提取文本的嵌入表示，LSTM 层用于序列建模，最后通过全连接层输出分类结果。模型的输入参数包括一个预训练的 BERT 模型实例 `bert_model` 和分类类别数 `num_classes`。内部 LSTM 层的输入维度为 BERT 的隐藏层维度（`embedding_dim`），输出维度为 `embedding_dim // 2`；全连接层的输入维度为 `embedding_dim // 2`，输出维度为 `num_classes`。最终输出为形状为 `[batch_size, num_classes]` 的 logits 向量，表示每个样本属于各个类别的得分。",
+        "path": "upload_files\\codes\\LSTM\\lstm.py"
+    },
+    "code_13": {
+        "summarize": "基于 BERT 和 LSTM 的文本分类训练流程：设置环境（随机种子、设备）→解析超参数→加载模型与数据→构建分类器→多轮训练（含评估、学习率调度、保存模型）",
+        "describe": "这段代码实现了一个基于 BERT 和 LSTM 的文本分类训练流程。首先设置随机种子以确保实验可复现，选择 GPU 或 CPU 作为计算设备；接着通过 Options 类解析命令行参数，获取超参数如最大序列长度为 256、学习率为 0.001、批次大小为 8、训练轮数为 5 等，并创建保存模型的目录；然后加载预训练的中文 BERT 分词器和模型，使用 TextDataset 类加载并处理训练和测试数据，构建 DataLoaders；随后实例化一个基于 BERT 和 LSTM 的分类器模型，并将其部署到指定设备上；在训练过程中，使用 Nadam 优化器（学习率 0.001，权重衰减 5e-4）和余弦退火调度器（周期为 5 个 epoch，最小学习率 1e-9）进行参数更新和学习率调整；每轮训练后调用 train 函数计算损失和准确率，并在测试集上调用 evaluate 函数评估模型性能；最后将模型参数保存为 .pth 文件。",
+        "path": "upload_files\\codes\\LSTM\\main.py"
+    },
+    "code_14": {
+        "summarize": "Options 类通过 argparse 解析命令行参数，提供模型训练的完整配置，包含模型保存路径、数据集路径、文本长度、分类数量、学习率、批次大小和训练轮数等关键参数。",
+        "describe": "Options 类借助 argparse 模块解析命令行参数，为模型训练构建完整的参数配置体系。通过 __init__ 方法初始化参数解析器，设置的关键参数及其默认值如下：模型保存路径为 ../../results/models/lstm/，训练和测试数据集路径分别为 ../../datas/train.csv 和 ../../datas/test.csv，文本最大长度为 256，分类数量为 2，学习率为 0.001，批次大小为 8，训练轮数为 5。parse 方法用于解析命令行参数并返回解析后的参数对象，方便在训练脚本中统一使用。",
+        "path": "upload_files\\codes\\LSTM\\option.py"
+    },
+    "code_15": {
+        "summarize": "主函数初始化训练环境并加载模型进行预测，包含参数解析、模型与数据加载、评估流程",
+        "describe": "该主函数用于初始化训练环境并加载模型进行预测。首先设置随机种子（如 42）以确保实验可复现，选择运行设备（如 'cuda' 或 'cpu'），然后通过 Options 类解析命令行参数获取超参数配置，包括模型保存路径（如 '../../results/models/lstm/'）、训练和测试数据路径（如 '../../datas/train.csv' 和 '../../datas/test.csv'）、文本最大长度（如 256）、学习率（如 0.001）、批次大小（如 8）、训练轮数（如 5）、分类数量（如 2）；接着加载预训练的中文 BERT 分词器和模型，以及训练和测试数据集，并将其转换为数据加载器；最后加载已训练好的 LSTM 模型权重，并将其部署到指定设备上，进入评估模式。",
+        "path": "upload_files\\codes\\LSTM\\prediction.py"
+    }
+}
